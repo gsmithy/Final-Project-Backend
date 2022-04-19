@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql2')
+var mysql = require('mysql2')
 
 
 var connection = mysql.createConnection({
@@ -23,5 +23,7 @@ var connection = mysql.createConnection({
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+/* USER login. */
 
 module.exports = router;

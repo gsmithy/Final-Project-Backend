@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var models = require('./models')
+var models = require('./models');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -40,7 +40,7 @@ app.use(function(err, req, res, next) {
 });
 
 models.sequelize.sync().then(function(){
-  console.log('GoodNews is Synced!')
+  console.log('DB Good To GO!')
 });
 
 module.exports = app;
