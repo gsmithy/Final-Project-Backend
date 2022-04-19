@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   database: 'goodnews'
 });
 
-connection.connect(function(err){
+  connection.connect(function(err){
   if (err) {
     console.error(err.message);
     return;
