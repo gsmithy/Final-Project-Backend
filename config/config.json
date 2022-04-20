@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "bethel123",
-    "database": "goodnews",
+    "database": "GoodNews",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "bethel123",
+    "database": "GoodNews",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "bethel123",
+    "database": "GoodNews",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
