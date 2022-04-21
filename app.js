@@ -5,8 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var models = require('./models');
 
-var indexRouter = require('./routes/index');
+
 var usersRouter = require('./routes/users');
+var homeRouter = require('./routes/home');
 
 var app = express();
 
@@ -18,11 +19,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Sync DB to models
-models.sequelize.sync({alter: true}).then(function(){
+models.sequelize.sync({alter:true}).then(function(){
   console.log('GoodNews is Synced!')
 });
 
-app.use('/', indexRouter);
+app.use('/', homeRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

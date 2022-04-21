@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
+const {User} = require('../models');
 
-/* GET users listing. */
+/* GET users listing for ADMIN? TBC */
 router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
+  User.findAll().then(userList => {
+    res.json(userList)
+  })
 });
+
+/* GET user login */
+
 
 module.exports = router;
