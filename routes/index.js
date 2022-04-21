@@ -19,11 +19,4 @@ var connection = mysql.createConnection({
 });
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-/* USER login. */
-
 module.exports = router;

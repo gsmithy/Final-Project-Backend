@@ -1,59 +1,78 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const {Model} = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.hasMany(models.Post, {
-        foreignKey: 'id' 
-      });
+      this.hasMany(models.Post);
     };
   };
 
   User.init({
 
+    admin: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false
+    },
+
     first_name: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true
       },
     last_name: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true
     },
     user_name: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true,
+                unique: true,
+                notEmpty: true
     },
     password: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true,
+                notEmpty: true
     },
     email: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true,
+                unique: true,
+                isEmail: true,
+                notEmpty: true
     },
     address: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true,
+                notEmpty: true
     },
     state: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true
     },
     city: {
-            type: DataTypes.STRING,
-            allowNull: false
-    },
+                type: DataTypes.STRING,
+                allowNull: true
+        },
     zip_code: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                notEmpty: true
     },
     country: {
-            type: DataTypes.STRING,
-            allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true
+    },
+    createdAt: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                unique: false
+    },
+    updatedAt: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                unique: false
     }
-    
   }, {
     sequelize,
     modelName: 'User',
