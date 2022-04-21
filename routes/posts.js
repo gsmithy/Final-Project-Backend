@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Post } = require('../models');
-var auth = require('../services/auth');
+//var auth = require('../services/auth');
 
 /* GET returns all posts. */
 router.get('/', function(req, res, next) {
@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 //Post create a post
 router.post('/', async function(req, res, next) {
-    //Get token from request
+    // Get token from request
     const header = req.headers.authorization;
     if (!header) {
         res.status(403).send();
@@ -28,13 +28,13 @@ router.post('/', async function(req, res, next) {
         res.status(403).send();
         return;
     }
-    //Create the post wit the user id
+    // Create the post wit the user id
 
     Post.create({
         user_name: req.body.user_name, //DB Scpecifies "user_name"
         description: req.body.description,
         location: req.body.location,
-        UserId: user.id
+        UserId: user.UserId
     }).then(newPost => {
         res.json(newPost);
     }).catch(() => {
