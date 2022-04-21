@@ -18,7 +18,7 @@ router.post('/', async function(req, res, next) {
   }
 
   User.create({
-      //admin: req.body.admin,
+      //admin: req.body.admin,  Does this need to be here?
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       user_name: req.body.user_name, 
@@ -29,9 +29,12 @@ router.post('/', async function(req, res, next) {
       city: req.body.city,
       zip_code: req.body.zip_code,
       country: req.body.country,
-      UserId: user.id
+      UserId: user.id //Is this the correct id?
   }).then(newUser => {
-      res.json(newUser);
+      res.json({
+        id: newUser.id,
+        user_name: newUser.user_name
+      });
   }).catch(() => {
       res.status(400).send();
   });
