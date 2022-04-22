@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('final-project:server');
 var http = require('http');
+var jwt = require('jsonwebtoken');
 
 /**
  * Get port from environment and store in Express.

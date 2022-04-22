@@ -1,23 +1,25 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models')
+const { User } = require('../models');
 
-const secreteKey = 'iamthesecretkey';
+const secretKey = 'iamthesecretkey';
 
+/* JWT Token creation */
 module.exports = {
     createJWT: (user) => {
         const token = jwt.sign({
-            username: user.user_name,
+            username: user.user_name, 
             id: user.id
         },
-        secreteKey,
+        secretKey,
         {
-            expiresIn: '24h'
+            expiresIn: '10h'
         });
 
         return token;
     },
     verifyUser: (token) => {
-        const decodedPayload = jwt.verify(token, secreteKey)
+        const decodedPayload = jwt.verify(token, secretKey)
         return User.findByPk(decodedPayload.id)
     }
-}
+};
+
