@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql2')
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql2')
 
 
 var connection = mysql.createConnection({

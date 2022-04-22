@@ -1,30 +1,50 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcrypt');
 const { User } = require('../models');
-var bcrypt = require('bcrypt');
-const async = require('hbs/lib/async');
+const auth = require('../services/auth');
 
-/* GET users listing for ADMIN? TBC */
-router.get('/', (req, res, next) => {
-  User.findAll().then(userList => {
-    res.json(userList)
-  })
+
+/* User Login */
+router.post('/login', async (req, res, next) => {
+  User.findOne({
+    where: {
+      user_name: req.body.user_name
+    }
+  }).then(async user => {
+    //Validation/Verification - check if user exists
+    if (!user) {
+      res.status(404).send('Invalid Username');
+      return;
+    };
+    //Authentication - check if user exists
+    const valid = await bcrypt.compare(req.body.password, user.password);
+
+    if (valid) {
+    // Create the JWT token
+      const jwt = auth.createJWT(user);
+      res.status(200).send({ jwt }); //We send a Json Object.
+    } else {
+      res.status(401).send("Invalid Password!");
+    }
+  });
 });
 
-//Sign Up
-router.post('/', async function(req, res, next) { // is async correct syntax?
+/* User Sign up */
+router.post('/', async (req, res, next) => { 
 
+  //Validation/Verification
   if(!req.body.user_name || !req.body.password ) {
     res.status(400).send('Username and Password required');
     return;
   }
-    //hash the password
-    const salt = await bcrypt.genSalt(10);
+    //Encryption - (hashing) password
+    const salt = await bcrypt.genSalt(10); //genSalt is asyncronous, so we have to specify waiting.
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
 
   User.create({
-      //admin: req.body.admin,  Does this need to be here?
+      
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       user_name: req.body.user_name, 
@@ -35,7 +55,8 @@ router.post('/', async function(req, res, next) { // is async correct syntax?
       city: req.body.city,
       zip_code: req.body.zip_code,
       country: req.body.country,
-      UserId: user.id 
+       
+
   }).then(newUser => {
       res.json({
         id: newUser.id,
@@ -46,26 +67,6 @@ router.post('/', async function(req, res, next) { // is async correct syntax?
   });
 });
 
-//Login
-router.post('/login', async function(req, res, next) {
-  User.findOne({
-    where: {
-      user_name: req.body.user_name
-    }
-  }).then(async user =>{
-    if (!user) {
-      res.status(404).send('Invalid Username');
-      return;
-    }
-    const valid = await bcrypt.compare(req.body.password, user.password);
-
-    if (valid) {
-      res.status(200).send('Hi!' + user.user_name);
-    } else {
-      res.status(401).send("Invalid Password");
-    }
-  });
-});
 
 
 module.exports = router;

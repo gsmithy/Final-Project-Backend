@@ -1,40 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { Post } = require('../models');
-//var auth = require('../services/auth');
+
 
 /* GET returns all posts. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   Post.findAll()
     .then(postList => {
         res.json(postList);
-    }) 
+    }); 
 });
 
-//Post create a post
-router.post('/', async function(req, res, next) {
-    // Get token from request
-    const header = req.headers.authorization;
-    if (!header) {
-        res.status(403).send();
-        return;
-    }
-
-    const token = header.split('')[1];
-    //Validate token/Get the user
-    const user = await auth.verifyUser(token);
-
-    if (!user) {
-        res.status(403).send();
-        return;
-    }
-    // Create the post wit the user id
-
+/* POST user create new post */
+router.post('/', (req, res, next) => {
     Post.create({
         user_name: req.body.user_name, //DB Scpecifies "user_name"
         description: req.body.description,
-        location: req.body.location,
-        UserId: user.UserId
+        location: req.body.location
     }).then(newPost => {
         res.json(newPost);
     }).catch(() => {
@@ -42,9 +24,8 @@ router.post('/', async function(req, res, next) {
     });
 });
 
-
-//Put update a post
-router.put('/:id', function(req, res, next) {
+/* PUT user updates a post */
+router.put('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     
     if (!postId || postId <= 0) {
@@ -67,8 +48,8 @@ router.put('/:id', function(req, res, next) {
     })
 });
 
-//Delete
-router.delete('/:id', function(req, res, next) {
+/* DELETE user deletes a post */
+router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     
     if (!postId || postId <= 0) {
@@ -87,8 +68,8 @@ router.delete('/:id', function(req, res, next) {
     })
 });
 
-//Get individual post by id
-router.get('/:id', function(req, res, next) {
+/* GET user views a post by post ID */
+router.get('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     Post.findOne({
         where: {

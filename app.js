@@ -10,8 +10,8 @@ var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
 
-var app = express();
 
+var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,6 +27,7 @@ models.sequelize.sync({alter:true}).then(function(){
 app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

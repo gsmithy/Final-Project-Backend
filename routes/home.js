@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql2');
-const {Post} = require('../models');
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql2');
+const { Post } = require('../models');
 
 
 router.get('/', (req, res, next) => {
