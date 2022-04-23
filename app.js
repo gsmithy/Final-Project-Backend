@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var models = require('./models');
+var auth = require('./services/auth'); //adding this line broke the app "too many keys specified; max 64 keys allowed" error.
 
 
 var usersRouter = require('./routes/users');
@@ -20,8 +21,25 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Sync DB to models
-models.sequelize.sync({alter:true}).then(function(){
+models.sequelize.sync({alter:true, force:true}).then(function(){ //"force: true" is only for development, we will change it to "force: false" after dev. WARNING! THIS WILL DELETE DATA!
   console.log('GoodNews is Synced!')
+});
+
+app.use(async (req, res, next) => {
+  //get token from the request
+
+const header = req.header.authorization; //receives the token
+
+if (!header) {
+    return next();
+}
+
+//splits string of token at the 'space' - separates Bearer and hash to get the hash.
+const token = header.split('')[1];
+
+// validate/verify - get the user from the token
+const user = await auth.verifyUser(token);
+req.user = user;
 });
 
 app.use('/', homeRouter);

@@ -14,20 +14,20 @@ router.get('/', async (req, res, next) => {
 
 /* POST user create new post */
 router.post('/', async (req, res, next) => {
-//get token from the request
+// //get token from the request
 
-const header = req.header.authorization; //receives the token
+// const header = req.header.authorization; //receives the token
 
-if (!header) {
-    res.status(403).send();
-    return;
-}
+// if (!header) {
+//     res.status(403).send();
+//     return;
+// }
 
-//splits string of token at the 'space' - separates Bearer and hash to get the hash.
-const token = header.split('')[1];
+// //splits string of token at the 'space' - separates Bearer and hash to get the hash.
+// const token = header.split('')[1];
 
 // validate/verify - get the user from the token
-const user = await auth.verifyUser(token);
+const user = req.user; //added middleware
 
 if (!user) {
     res.status(403).send(); //not good/expired token
@@ -40,7 +40,7 @@ if (!user) {
         user_name: req.body.user_name, //DB Scpecifies "user_name"
         description: req.body.description,
         location: req.body.location,
-        UserId: user.id //foreign key??
+        UserId: user.id //foreign key??   Can't create new post yet (403) - DK
     }).then(newPost => {
         res.json(newPost);
     }).catch(() => {
