@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
 
 
   User.create({
-      
+      admin: req.body.admin, //need to show up in the db as true or false
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       user_name: req.body.user_name, 
