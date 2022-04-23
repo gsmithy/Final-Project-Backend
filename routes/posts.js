@@ -14,25 +14,14 @@ router.get('/', async (req, res, next) => {
 
 /* POST user create new post */
 router.post('/', async (req, res, next) => {
-// //get token from the request
 
-// const header = req.header.authorization; //receives the token
 
-// if (!header) {
-//     res.status(403).send();
-//     return;
-// }
-
-// //splits string of token at the 'space' - separates Bearer and hash to get the hash.
-// const token = header.split('')[1];
-
-// validate/verify - get the user from the token
 const user = req.user; //added middleware
 
 if (!user) {
     res.status(403).send(); //not good/expired token
     return;
-}
+};
 
 // create the post with the user id
 
@@ -57,11 +46,12 @@ router.put('/:id', (req, res, next) => {
         return;
     }
 
-    // Get the user from jwt
+    const user = req.user; //added middleware
 
-    // Get the post already in the DB
-
-    //Compare the cat's userid to the token user id
+    if (!user) {
+    res.status(403).send(); //not good/expired token
+    return;
+}
 
     Post.update({
         user_name: req.body.user_name, //DB Scpecifies "user_name"
@@ -86,6 +76,13 @@ router.delete('/:id', (req, res, next) => {
         res.status(400).send("Invalid ID");
         return;
     }
+
+    const user = req.user; //added middleware
+
+    if (!user) {
+    res.status(403).send(); //not good/expired token
+    return;
+}
 
     Post.destroy({
         where: {
