@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var models = require('./models');
-var auth = require('./services/auth'); //adding this line broke the app "too many keys specified; max 64 keys allowed" error.
+var auth = require('./services/auth'); //adding this line broke the app "too many keys specified; max 64 keys allowed" error. See solution on line 24
 
 
 var usersRouter = require('./routes/users');
@@ -40,6 +40,7 @@ const token = header.split('')[1];
 // validate/verify - get the user from the token
 const user = await auth.verifyUser(token);
 req.user = user;
+next();
 });
 
 app.use('/', homeRouter);
