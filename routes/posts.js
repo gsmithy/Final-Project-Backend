@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Post } = require('../models');
-//var auth = require('../services/auth');
+var auth = require('../services/auth');
 
 /* GET returns all posts. */
 router.get('/', function(req, res, next) {
