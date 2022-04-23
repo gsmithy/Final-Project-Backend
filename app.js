@@ -20,8 +20,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Sync DB to models
-models.sequelize.sync({alter:true}).then(function(){
-  console.log('GoodNews is Synced!')
+models.sequelize.sync({ alter:true }).then(function(){
+  console.log('goodnews is Synced!')
 });
 
 app.use('/', homeRouter);

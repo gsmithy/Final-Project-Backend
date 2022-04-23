@@ -5,6 +5,7 @@ const { Post } = require('../models');
 
 
 /* GET returns all posts. */
+
 router.get('/', async (req, res, next) => {
   Post.findAll()
     .then(postList => {
@@ -13,6 +14,7 @@ router.get('/', async (req, res, next) => {
 });
 
 /* POST user create new post */
+
 router.post('/', async (req, res, next) => {
 //get token from the request
 
@@ -49,6 +51,7 @@ if (!user) {
 });
 
 /* PUT user updates a post */
+
 router.put('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     
@@ -79,6 +82,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 /* DELETE user deletes a post */
+
 router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     
@@ -99,6 +103,7 @@ router.delete('/:id', (req, res, next) => {
 });
 
 /* GET user views a post by post ID */
+
 router.get('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
     Post.findOne({
