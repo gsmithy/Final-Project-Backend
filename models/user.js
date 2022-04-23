@@ -10,15 +10,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init({
 
-    admin: {
-                type: DataTypes.BOOLEAN,
-                allowNull: true
-    },
-
     first_name: {
                 type: DataTypes.STRING,
                 allowNull: true
-      },
+    },
     last_name: {
                 type: DataTypes.STRING,
                 allowNull: true
@@ -33,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: true,
                 notEmpty: true
+    },
+    position: {
+                type: DataTypes.STRING,
+                defaultValue: 'regular',
+                allowNull: false
     },
     email: {
                 type: DataTypes.STRING,
