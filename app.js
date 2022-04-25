@@ -21,14 +21,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Sync DB to models
-models.sequelize.sync({alter:true, force:true}).then(function(){ //"force: true" is only for development, we will change it to "force: false" after dev. WARNING! THIS WILL DELETE DATA!
+models.sequelize.sync({alter:true}).then(function(){ //"force: true" is only for development, we will change it to "force: false" after dev. WARNING! THIS WILL DELETE DATA!
   console.log('GoodNews is Synced!')
 });
 
 app.use(async (req, res, next) => {
   //get token from the request
 
-const header = req.header.authorization; //receives the token
+const header = req.headers.authorization; //receives the token
 
 if (!header) {
     return next();

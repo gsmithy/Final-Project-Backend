@@ -14,14 +14,24 @@ router.get('/', async (req, res, next) => {
 
 /* POST user create new post */
 router.post('/', async (req, res, next) => {
-
-
-const user = req.user; //added middleware
-
-if (!user) {
-    res.status(403).send(); //not good/expired token
+const header = req.headers.authorization;
+console.log('header', header);
+if (!header) {
+    res.status(403).send();
     return;
 };
+
+const token = header.split(' ')[1];
+
+console.log('token', token);
+
+const user = await auth.verifyUser(token);
+console.log('user', user);
+if (!user) {
+    res.status(403).send();
+    return;
+};
+
 
 // create the post with the user id
 
@@ -29,7 +39,7 @@ if (!user) {
         user_name: req.body.user_name, //DB Scpecifies "user_name"
         description: req.body.description,
         location: req.body.location,
-        UserId: user.id //foreign key??   Can't create new post yet (403) - DK
+        //UserId: user.id //foreign key??   Can't create new post yet (403) - DK
     }).then(newPost => {
         res.json(newPost);
     }).catch(() => {
