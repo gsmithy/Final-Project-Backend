@@ -6,7 +6,7 @@ const { Post } = require('../models');
 
 
 
-/* GET returns all posts. */
+/* GET Home Page - returns all posts. */
 
 router.get('/', async (req, res, next) => {
   Post.findAll()
@@ -106,12 +106,27 @@ router.put('/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
-    
-    if (!postId || postId <= 0) {
-        res.status(400).send("Invalid ID");
-        return;
-    }
 
+        if (!postId || postId <= 0) {
+            res.status(400).send("Invalid ID");
+            return;
+    };
+
+    const header = req.headers.authorization;
+
+        if (!header){
+            res.status(403).send('You do not have authorization to delete!');
+            return;
+        };
+
+        const token = header.split(' ')[1];
+        const user = auth.verifyUser(token);
+
+            if (!user){
+                res.status(403).send('Token expired/You are not logged in!');
+                return;
+            };
+    
     Post.destroy({
         where: {
             id: postId
