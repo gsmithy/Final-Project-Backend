@@ -10,27 +10,29 @@ const { Post } = require('../models');
 
 router.get('/', async (req, res, next) => {
   Post.findAll()
-    .then(postList => {
+    .then( postList => {
         res.json(postList);
     }); 
 });
 
-// router.get('/:id', async (req, res, next) => {
-//     const myPosts = parseInt(req.params.id)
-//     Post.findAll({
-//         where: {
-//             UserId: myPosts
-//         }
-//         .then(posts => {
-//             res.json(posts).send({
-//                 user_name: posts.user_name,
-//                 location: posts.location,
-//                 description: posts.description,
-//                 createdAt: posts.createdAt //we need to display this
-//             })
-//         })
-//     })
-// })
+/* GET Dashboard posts - User sees all his posts */
+router.get('/:username', async (req, res, next) => {
+    const whosePosts = req.params.username;
+    
+
+    Post.findAll({
+        where: {
+            user_name: whosePosts
+        }
+    }).then( result => {
+        if (result){
+            res.status(200).send(result);
+        } else {
+            res.status(400).send('Oops! Something went wrong!')
+        }
+    })
+});
+
 
 /* POST user create new post */
 

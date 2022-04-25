@@ -35,11 +35,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: true,
                 notEmpty: true
     },
-    position: {
-                type: DataTypes.STRING,
-                defaultValue: 'regular',
-                allowNull: false
-    },
     email: {
                 type: DataTypes.STRING,
                 allowNull: true,
