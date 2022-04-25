@@ -10,7 +10,7 @@ var cors = require('cors');
 var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
-var adminRouter = require('./routes/admin');
+
 
 
 var app = express();
@@ -30,7 +30,7 @@ models.sequelize.sync({ alter:true }).then(function(){
 app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
-app.use('/admin', adminRouter)
+
 
 
 // catch 404 and forward to error handler

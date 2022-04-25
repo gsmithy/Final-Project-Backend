@@ -4,6 +4,8 @@ const auth = require('../services/auth');
 const { Post } = require('../models');
 
 
+
+
 /* GET returns all posts. */
 
 router.get('/', async (req, res, next) => {
@@ -13,12 +15,30 @@ router.get('/', async (req, res, next) => {
     }); 
 });
 
+// router.get('/:id', async (req, res, next) => {
+//     const myPosts = parseInt(req.params.id)
+//     Post.findAll({
+//         where: {
+//             UserId: myPosts
+//         }
+//         .then(posts => {
+//             res.json(posts).send({
+//                 user_name: posts.user_name,
+//                 location: posts.location,
+//                 description: posts.description,
+//                 createdAt: posts.createdAt //we need to display this
+//             })
+//         })
+//     })
+// })
+
 /* POST user create new post */
 
 router.post('/', async (req, res, next) => {
 //get token from the request
 
-const header = req.header.authorization; //receives the token
+const header = req.headers.authorization; //receives the token
+console.log('header', header);
 
 if (!header) {
     res.status(403).send();
@@ -26,7 +46,8 @@ if (!header) {
 }
 
 //splits string of token at the 'space' - separates Bearer and hash to get the hash.
-const token = header.split('')[1];
+const token = header.split(' ')[1];
+console.log('token', token);
 
 // validate/verify - get the user from the token
 const user = await auth.verifyUser(token);
@@ -42,7 +63,7 @@ if (!user) {
         user_name: req.body.user_name, //DB Scpecifies "user_name"
         description: req.body.description,
         location: req.body.location,
-        UserId: user.id //foreign key??
+        UserId: user.id 
     }).then(newPost => {
         res.json(newPost);
     }).catch(() => {
@@ -64,7 +85,7 @@ router.put('/:id', (req, res, next) => {
 
     // Get the post already in the DB
 
-    //Compare the cat's userid to the token user id
+    //Compare the post's userid to the token user id
 
     Post.update({
         user_name: req.body.user_name, //DB Scpecifies "user_name"
@@ -102,7 +123,7 @@ router.delete('/:id', (req, res, next) => {
     })
 });
 
-/* GET user views a post by post ID */
+/* GET user views a post by post ID */ //Do we need?
 
 router.get('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);

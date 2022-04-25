@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init({
 
+    admin: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true 
+    },
+
     first_name: {
                 type: DataTypes.STRING,
                 allowNull: true
@@ -60,6 +65,10 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: true
     },
     country: {
+                type: DataTypes.STRING,
+                allowNull: true
+    },
+    profile_pic: {
                 type: DataTypes.STRING,
                 allowNull: true
     },
