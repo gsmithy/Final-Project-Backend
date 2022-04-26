@@ -12,13 +12,14 @@ module.exports = (sequelize, DataTypes) => {
 
     admin: {
                 type: DataTypes.BOOLEAN,
-                allowNull: true
+                allowNull: false,
+                defaultValue: false
     },
 
     first_name: {
                 type: DataTypes.STRING,
                 allowNull: true
-      },
+    },
     last_name: {
                 type: DataTypes.STRING,
                 allowNull: true
@@ -61,6 +62,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     country: {
                 type: DataTypes.STRING,
+                allowNull: true
+    },
+    profile_pic: {
+                type: DataTypes.STRING,
+                defaultValue: null,
                 allowNull: true
     },
     createdAt: {
