@@ -5,12 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var models = require('./models');
 var cors = require('cors');
+var auth = require('./services/auth');
 
 
 var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
-//var adminRouter = require('./routes/admin');
+var adminRouter = require('./routes/admin');
 
 
 
@@ -28,29 +29,23 @@ models.sequelize.sync({ alter: true }).then(function(){
   console.log('goodnews is Synced!')
 });
 
+//Reuseable Auth check
+app.use( async (req, res, next) => {
+    const header = req.headers.authorization; 
+      if (!header) {
+        return next();
+  };
+    const token = header.split(' ')[1];
+    const user = await auth.verifyUser(token);
+
+    req.user = user;
+    next();
+});
+
 app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
-//app.use('/admin', adminRouter);
-
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
+app.use('/admin', adminRouter);
 
 
 module.exports = app;

@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../services/auth');
-const bcrypt = require('bcrypt');
 const { Post } = require('../models');
 
 
@@ -18,19 +16,12 @@ router.get('/', async (req, res, next) => {
 /* GET DASHBOARD POSTS - User sees all his posts */
 router.get('/:username', async (req, res, next) => {
     const whosePosts = req.params.username;
-    const header = req.headers.authorization;
-        if (!header){
-            res.status(400).send('No header received!');
-            return;
-        }
-    const token = header.split(' ')[1];
-    //console.log('token' , token)
-    const user = await auth.verifyUser(token);
-
+    
+    const user = req.user;
         if (!user){
             res.status(403).send('Please log in!');
             return;
-        }
+        };
 
     Post.findAll({
         where: {
@@ -45,25 +36,14 @@ router.get('/:username', async (req, res, next) => {
     })
 });
 
-
 /* POST CREATE POSTS - User creates a new post */
 
 router.post('/', async (req, res, next) => {
-    const header = req.headers.authorization; //receives the token
-
-        if (!header) {
-            res.status(403).send();
-            return;
-        };
-    const token = header.split(' ')[1];
-// validate/verify - get the user from the token
-    const user = await auth.verifyUser(token);
-
-        if (!user) {
-            res.status(403).send(); //not good/expired token
-            return;
-        }
-
+    const user = req.user;
+    if (!user){
+        res.status(403).send('Please log in!');
+        return;
+    };
         //if (token === )
     Post.create({
 
@@ -92,27 +72,13 @@ router.put('/:id', async (req, res, next) => {
     if (!postId || postId <= 0) {
         res.status(400).send("Invalid ID");
         return;
-    }
-
-    // Get the user from jwt
-    const header = req.headers.authorization;
-
-        if (!header) {
-            res.status(403).send('Please Log In!');
-            return;
-        }
-    
-    // Get the post already in the DB
-    const token = header.split(' ')[1];
-    const user = auth.verifyUser(token);
-
-        if (!user){
-            res.status(403).send();
-            return;
-        };
-        
+    };
+    const user = req.user;
+    if (!user){
+        res.status(403).send('Please log in!');
+        return;
+    };
     //Compare the post's userid to the token user id
-
     Post.update({
 
         description: req.body.description,
@@ -122,8 +88,8 @@ router.put('/:id', async (req, res, next) => {
         where: {
             id: postId
         }
-    }).then(() => {
-        res.status(200).send();
+    }).then( () => {
+        res.status(200).send('Update success!');
     }).catch(() => {
         res.status(400).send();
     })
@@ -138,23 +104,12 @@ router.delete('/:id', (req, res, next) => {
             res.status(400).send("Invalid id!");
             return;
     };
+    const user = req.user;
+    if (!user){
+        res.status(403).send('Please log in!');
+        return;
+    };
 
-    const header = req.headers.authorization;
-
-        if (!header){
-            res.status(403).send('You do not have authorization to delete!');
-            return;
-        };
-
-        const token = header.split(' ')[1];
-        const user = auth.verifyUser(token);
-
-            if (!user){
-                res.status(403).send('Token expired/You are not logged in!');
-                res.redirect('/login');
-                return;
-            };
-    
     Post.destroy({
         where: {
             id: postId
