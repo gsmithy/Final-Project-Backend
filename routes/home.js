@@ -5,6 +5,7 @@ const { Post } = require('../models');
 
 /* GET HOME PAGE - returns all posts. */
 router.get('/home', async (req, res, next) => {
+  
   Post.findAll()
     .then( postList => {
         res.json(postList);
