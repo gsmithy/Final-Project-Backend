@@ -10,6 +10,7 @@ var cors = require('cors');
 var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
+//var adminRouter = require('./routes/admin');
 
 
 
@@ -23,13 +24,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); //Cross-origin request. Adjusts permission for this server to be accessed by a client.
 
 //Sync DB to models
-models.sequelize.sync({ alter:true }).then(function(){
+models.sequelize.sync({ alter: true }).then(function(){
   console.log('goodnews is Synced!')
 });
 
 app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
+//app.use('/admin', adminRouter);
 
 
 

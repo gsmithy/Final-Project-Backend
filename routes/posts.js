@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../services/auth');
+const bcrypt = require('bcrypt');
 const { Post } = require('../models');
 
 
 
-
-/* GET Home Page - returns all posts. */
+/* GET HOME PAGE - returns all posts. */
 
 router.get('/', async (req, res, next) => {
   Post.findAll()
@@ -15,10 +15,22 @@ router.get('/', async (req, res, next) => {
     }); 
 });
 
-/* GET Dashboard posts - User sees all his posts */
+/* GET DASHBOARD POSTS - User sees all his posts */
 router.get('/:username', async (req, res, next) => {
     const whosePosts = req.params.username;
-    
+    const header = req.headers.authorization;
+        if (!header){
+            res.status(400).send('No header received!');
+            return;
+        }
+    const token = header.split(' ')[1];
+    //console.log('token' , token)
+    const user = await auth.verifyUser(token);
+
+        if (!user){
+            res.status(403).send('Please log in!');
+            return;
+        }
 
     Post.findAll({
         where: {
@@ -34,48 +46,47 @@ router.get('/:username', async (req, res, next) => {
 });
 
 
-/* POST user create new post */
+/* POST CREATE POSTS - User creates a new post */
 
 router.post('/', async (req, res, next) => {
-//get token from the request
+    const header = req.headers.authorization; //receives the token
 
-const header = req.headers.authorization; //receives the token
-console.log('header', header);
-
-if (!header) {
-    res.status(403).send();
-    return;
-}
-
-//splits string of token at the 'space' - separates Bearer and hash to get the hash.
-const token = header.split(' ')[1];
-console.log('token', token);
-
+        if (!header) {
+            res.status(403).send();
+            return;
+        };
+    const token = header.split(' ')[1];
 // validate/verify - get the user from the token
-const user = await auth.verifyUser(token);
+    const user = await auth.verifyUser(token);
 
-if (!user) {
-    res.status(403).send(); //not good/expired token
-    return;
-}
+        if (!user) {
+            res.status(403).send(); //not good/expired token
+            return;
+        }
 
-// create the post with the user id
-
+        //if (token === )
     Post.create({
-        user_name: req.body.user_name, //DB Scpecifies "user_name"
+
+        user_name: req.body.user_name, 
         description: req.body.description,
         location: req.body.location,
         UserId: user.id 
+
     }).then(newPost => {
-        res.json(newPost);
+        res.json({
+            user_name: newPost.user_name,
+            location: newPost.location,
+            description: newPost.description,
+            createdAt: newPost.createdAt //TIMESTAMP
+        });
     }).catch(() => {
         res.status(400).send();
     });
 });
 
-/* PUT user updates a post */
+/* PUT UPDATE POST - User updates a post */
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     const postId = parseInt(req.params.id);
     
     if (!postId || postId <= 0) {
@@ -84,33 +95,47 @@ router.put('/:id', (req, res, next) => {
     }
 
     // Get the user from jwt
+    const header = req.headers.authorization;
 
+        if (!header) {
+            res.status(403).send('Please Log In!');
+            return;
+        }
+    
     // Get the post already in the DB
+    const token = header.split(' ')[1];
+    const user = auth.verifyUser(token);
 
+        if (!user){
+            res.status(403).send();
+            return;
+        };
+        
     //Compare the post's userid to the token user id
 
     Post.update({
-        user_name: req.body.user_name, //DB Scpecifies "user_name"
+
         description: req.body.description,
         location: req.body.location
+
     }, {
         where: {
             id: postId
         }
     }).then(() => {
-        res.status(204).send();
+        res.status(200).send();
     }).catch(() => {
         res.status(400).send();
     })
 });
 
-/* DELETE user deletes a post */
+/* DELETE DELETE POST - User deletes a post */
 
 router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
 
         if (!postId || postId <= 0) {
-            res.status(400).send("Invalid ID");
+            res.status(400).send("Invalid id!");
             return;
     };
 
@@ -126,6 +151,7 @@ router.delete('/:id', (req, res, next) => {
 
             if (!user){
                 res.status(403).send('Token expired/You are not logged in!');
+                res.redirect('/login');
                 return;
             };
     
@@ -134,29 +160,11 @@ router.delete('/:id', (req, res, next) => {
             id: postId
         }
     }).then(() => {
-        res.status(204).send();
+        res.status(204).send('Post successfully deleted!');
     }).catch(() => {
         res.status(400).send();
     })
 });
 
-/* GET user views a post by post ID */ //Do we need?
-
-router.get('/:id', (req, res, next) => {
-    const postId = parseInt(req.params.id);
-    Post.findOne({
-        where: {
-            id: postId
-        }
-    }).then(thePost => {
-        if(thePost) {
-            res.json(thePost)
-        } else {
-            res.status(404).send();
-        } err => {
-            res.status(500).send(err);
-        }
-    });
-});
 
 module.exports = router;

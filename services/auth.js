@@ -12,7 +12,7 @@ module.exports = {
         },
         secretKey,
         {
-        expiresIn: '10h'
+        expiresIn: '48h'
         });
 
         return token;

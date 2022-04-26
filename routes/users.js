@@ -5,13 +5,13 @@ const auth = require('../services/auth');
 const { User } = require('../models');
 
 
-/* User Login */
+/* POST USER LOGIN */
 router.post('/login', async (req, res, next) => {
   User.findOne({
     where: {
       user_name: req.body.user_name
     }
-  }).then(async user => {
+  }).then( async user => {
     //Validation/Verification - check if user exists
     if (!user) {
       res.status(404).send('Invalid Username');
@@ -30,7 +30,7 @@ router.post('/login', async (req, res, next) => {
   });
 });
 
-/* User Sign up */
+/* POST USER SIGN UP */
 router.post('/', async (req, res, next) => { 
 
   //Validation/Verification
@@ -45,6 +45,7 @@ router.post('/', async (req, res, next) => {
 
   User.create({
       
+      admin: req.body.admin,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       user_name: req.body.user_name, 
@@ -55,13 +56,16 @@ router.post('/', async (req, res, next) => {
       city: req.body.city,
       zip_code: req.body.zip_code,
       country: req.body.country,
+      profile_pic: req.body.profile_pic
        
 
   }).then(newUser => {
       res.json({
-        id: newUser.id,
-        user_name: newUser.user_name
-      });
+
+              id: newUser.id,
+              user_name: newUser.user_name
+
+              })
   }).catch(() => {
       res.status(400).send();
   });

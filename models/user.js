@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
     admin: {
                 type: DataTypes.BOOLEAN,
-                allowNull: true,
+                allowNull: false,
                 defaultValue: false
     },
 
@@ -66,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     profile_pic: {
                 type: DataTypes.STRING,
+                defaultValue: null,
                 allowNull: true
     },
     createdAt: {
