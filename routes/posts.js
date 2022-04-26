@@ -1,17 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { Post } = require('../models');
+const { User } = require('../models/user');
 
-
-
-/* GET HOME PAGE - returns all posts. */
-
-router.get('/', async (req, res, next) => {
-  Post.findAll()
-    .then( postList => {
-        res.json(postList);
-    }); 
-});
 
 /* GET DASHBOARD POSTS - User sees all his posts */
 router.get('/:username', async (req, res, next) => {
@@ -37,14 +28,18 @@ router.get('/:username', async (req, res, next) => {
 });
 
 /* POST CREATE POSTS - User creates a new post */
-
 router.post('/', async (req, res, next) => {
     const user = req.user;
     if (!user){
         res.status(403).send('Please log in!');
         return;
     };
-        //if (token === )
+
+    if (user.user_name != req.body.user_name){
+        res.status(403).send('You can only post as yourself!');
+        return;
+    };
+
     Post.create({
 
         user_name: req.body.user_name, 
@@ -78,7 +73,12 @@ router.put('/:id', async (req, res, next) => {
         res.status(403).send('Please log in!');
         return;
     };
-    //Compare the post's userid to the token user id
+    
+    // if (user.user_name != req.body.user_name){
+    //     res.status(403).send('You can only post as yourself!');
+    //     return;
+    // };
+
     Post.update({
 
         description: req.body.description,
@@ -96,17 +96,21 @@ router.put('/:id', async (req, res, next) => {
 });
 
 /* DELETE DELETE POST - User deletes a post */
-
 router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
 
-        if (!postId || postId <= 0) {
-            res.status(400).send("Invalid id!");
-            return;
+     if (!postId || postId <= 0) {
+        res.status(400).send("Invalid id!");
+        return;
     };
     const user = req.user;
     if (!user){
         res.status(403).send('Please log in!');
+        return;
+    };
+
+    if (user.user_name != req.body.user_name){
+        res.status(403).send('You can only post as yourself!');
         return;
     };
 

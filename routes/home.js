@@ -3,11 +3,15 @@ const router = express.Router();
 const mysql = require('mysql2');
 const { Post } = require('../models');
 
-
-router.get('/', (req, res, next) => {
-  Post.findAll().then(postDisplay => {
-      res.send(postDisplay);
-  });
+/* GET HOME PAGE - returns all posts. */
+router.get('/home', async (req, res, next) => {
+  
+  Post.findAll()
+    .then( postList => {
+        res.json(postList);
+    }).catch( err => {
+        res.status(404).send(err);
+    }) 
 });
 
 module.exports = router;
