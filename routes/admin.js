@@ -59,16 +59,16 @@ router.post('/', async (req, res, next) => {
 
 //PUT ADMIN UPDATES - Admin updates a post
 router.put('/:id', async (req, res, next) => {
-    const user = req.user;
-            if (!user){
-                res.status(403).send('Please log in!');
-                return;
-    };
     const postId = parseInt(req.params.id);
     
     if (!postId || postId <= 0) {
         res.status(400).send("Invalid ID");
         return;
+    };
+    const user = req.user;
+            if (!user){
+                res.status(403).send('Please log in!');
+                return;
     };
         if (user.user_name != 'ad'){
             res.status(403).send('Access Denied!');
