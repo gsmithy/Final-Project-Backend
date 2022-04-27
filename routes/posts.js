@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Post } = require('../models');
-const { User } = require('../models/user');
 
 
 /* GET DASHBOARD POSTS - User sees all his posts */
