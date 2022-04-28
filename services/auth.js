@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+
 const secretKey = 'iamthesecretkey';
 
 /* JWT Token creation */
@@ -16,6 +17,11 @@ module.exports = {
         });
 
         return token;
+    },
+    terminateJWT: (user) => {
+  
+     
+
     },
     verifyUser: (token) => {
         const decodedPayload = jwt.verify(token, secretKey)

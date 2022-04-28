@@ -12,38 +12,38 @@ router.post('/login', async (req, res, next) => {
       user_name: req.body.user_name
     }
   }).then( async user => {
-    //Validation/Verification - check if user exists
     if (!user) {
       res.status(404).send('Invalid Username');
       return;
     };
-    //Authentication - check if user exists
     const valid = await bcrypt.compare(req.body.password, user.password);
 
     if (valid) {
-    // Create the JWT token
       const jwt = auth.createJWT(user);
-      res.status(200).send({ jwt }); //We send a Json Object.
+      res.status(201).send({ jwt }); 
     } else {
       res.status(401).send("Invalid Password!");
     }
   });
 });
+/* GET LOGOUT - User logs out */
+router.get('/logout', async (req, res, next) => {
+  // res.cookie('jwt', "", { expires: new Date(0) });
+  auth.terminateJWT();
+  res.status(204).send('You are logged out!')
+
+})
 
 /* POST USER SIGN UP */
 router.post('/', async (req, res, next) => { 
-
-  //Validation/Verification
   if(!req.body.user_name || !req.body.password ) {
     res.status(400).send('Username and Password required');
     return;
-  }
-    //Encryption - (hashing) password
-    const salt = await bcrypt.genSalt(10); //genSalt is asyncronous, so we have to specify waiting.
+  };
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-
-  User.create({
+    User.create({
       
       admin: req.body.admin,
       first_name: req.body.first_name,
@@ -66,11 +66,10 @@ router.post('/', async (req, res, next) => {
               user_name: newUser.user_name
 
               })
-  }).catch(() => {
+  }).catch((err) => {
       res.status(400).send();
+      console.log(err)
   });
 });
-
-
 
 module.exports = router;
