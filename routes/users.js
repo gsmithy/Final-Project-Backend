@@ -26,12 +26,39 @@ router.post('/login', async (req, res, next) => {
     }
   });
 });
+
+
+  //  res.cookie('token', "", { expires: new Date(0) });
+  // // res.send('Logged out');
+
+//   app.get('/api/logout',auth,function(req,res){
+//     req.user.deleteToken(req.token,(err,user)=>{
+//         if(err) return res.status(400).send(err);
+//         res.sendStatus(200);
+//     });
+
+// }); 
+
+
 /* GET LOGOUT - User logs out */
 router.get('/logout', async (req, res, next) => {
-  // res.cookie('jwt', "", { expires: new Date(0) });
-  auth.terminateJWT();
-  res.status(204).send('You are logged out!')
-
+  //const token = req.headers.authorization;
+    // if (!token){
+    //   res.send("You're not logged in..");
+    //   return;
+    // };
+    //const token =  req.headers.authorization;
+// const header = req.headers.authorization;
+// if (header) {
+//   res.header('authorization', '');
+// }
+    
+      //res.removeHeader('authorization');
+      
+ 
+  
+  // res.header(auth.token, secretKey, { expires: new Date(0) });
+  // res.status(200).send('Logged out');
 })
 
 /* POST USER SIGN UP */
