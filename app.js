@@ -27,7 +27,7 @@ app.use(cors()); //Cross-origin request. Adjusts permission for this server to b
 models.sequelize.sync().then(() => {
   console.log('goodnews is Synced!')
 });
-var connection = mysql.createConnection({
+  const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'bethel123',

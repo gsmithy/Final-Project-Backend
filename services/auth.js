@@ -8,7 +8,7 @@ const secretKey = 'iamthesecretkey';
 module.exports = {
     createJWT: (user) => {
         const token = jwt.sign({
-            username: user.user_name, 
+            user_name: user.user_name, 
             id: user.id
         },
         secretKey,

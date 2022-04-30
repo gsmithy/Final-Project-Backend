@@ -3,12 +3,10 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const auth = require('../services/auth');
 const { User } = require('../models');
+const { Op } = require('sequelize');
 
 
 /* POST USER LOGIN */ 
-//NEEDS PIMPING!! WAS TRYING TO ADD A CHECK TO SEE THAT THE USER DOESNT ALREADY EXIST VIA
-//EMAIL. THEN ANOTHER CHECK TO MAKE SURE THEY'RE USING A UNIQUE USERNAME AS A 400 WILL OCCUR APON
-//THAT HAPPENING WITHOUT ANY NOTIFICATION TO THE USER. THEN CREATE USER. 
 router.post('/login', async (req, res, next) => {
   User.findOne({
     where: {
@@ -31,11 +29,19 @@ router.post('/login', async (req, res, next) => {
 });
 
 /* POST USER SIGN UP */
+//NEEDS PIMPING!! WAS TRYING TO ADD A CHECK TO SEE THAT THE USER DOESNT ALREADY EXIST VIA
+//EMAIL. THEN ANOTHER CHECK TO MAKE SURE THEY'RE USING A UNIQUE USERNAME AS A 400 WILL OCCUR APON
+//THAT HAPPENING WITHOUT ANY NOTIFICATION TO THE USER. THEN CREATE USER. 
 router.post('/', async (req, res, next) => { 
   if(!req.body.user_name || !req.body.password ) {
     res.status(400).send('Username and Password required');
     return;
   };
+  if(req.body.user_name === User.user_name){
+    res.status(400).send('message: Sorry..Username already exists!' );
+    return;
+  };
+
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
