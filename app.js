@@ -6,14 +6,13 @@ var logger = require('morgan');
 var models = require('./models');
 var cors = require('cors');
 var auth = require('./services/auth');
+var mysql = require('mysql2')
 
 
 var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
 var adminRouter = require('./routes/admin');
-
-
 
 var app = express();
 
@@ -25,8 +24,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); //Cross-origin request. Adjusts permission for this server to be accessed by a client.
 
 //Sync DB to models
-models.sequelize.sync().then(function(){
+models.sequelize.sync().then(() => {
   console.log('goodnews is Synced!')
+});
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'bethel123',
+  database: 'goodnews'
+});
+  connection.connect((err) => {
+    if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log('Nice! You are connected to the DB!')
 });
 
 //Reuseable Auth check
@@ -42,7 +54,7 @@ app.use( async (req, res, next) => {
     next();
 });
 //CORS
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();

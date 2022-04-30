@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     class Comment extends Model {
         static associate(models) {
             this.belongsTo(models.Post);
+            this.belongsTo(models.User);
         };
     };
 
@@ -14,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+
      }, {
         sequelize,
         modelName: 'Comment'
