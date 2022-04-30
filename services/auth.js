@@ -18,14 +18,6 @@ module.exports = {
 
         return token;
     },
-    terminateJWT: (user) => {
-
-        const token = 
-        res.header(token, secretKey, { expires: new Date(0) });
-        res.status(200).send('Logged out');
-
-    },
-
     verifyUser: (token) => {
         try {
             const decodedPayload = jwt.verify(token, secretKey)
