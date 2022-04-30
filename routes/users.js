@@ -3,27 +3,25 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const auth = require('../services/auth');
 const { User } = require('../models');
+const { Op } = require('sequelize');
 
 
-/* POST USER LOGIN */
+/* POST USER LOGIN */ 
 router.post('/login', async (req, res, next) => {
   User.findOne({
     where: {
       user_name: req.body.user_name
     }
   }).then( async user => {
-    //Validation/Verification - check if user exists
     if (!user) {
       res.status(404).send('Invalid Username');
       return;
     };
-    //Authentication - check if user exists
     const valid = await bcrypt.compare(req.body.password, user.password);
 
     if (valid) {
-    // Create the JWT token
       const jwt = auth.createJWT(user);
-      res.status(200).send({ jwt }); //We send a Json Object.
+      res.status(201).send({ jwt }); 
     } else {
       res.status(401).send("Invalid Password!");
     }
@@ -31,46 +29,49 @@ router.post('/login', async (req, res, next) => {
 });
 
 /* POST USER SIGN UP */
+//NEEDS PIMPING!! WAS TRYING TO ADD A CHECK TO SEE THAT THE USER DOESNT ALREADY EXIST VIA
+//EMAIL. THEN ANOTHER CHECK TO MAKE SURE THEY'RE USING A UNIQUE USERNAME AS A 400 WILL OCCUR APON
+//THAT HAPPENING WITHOUT ANY NOTIFICATION TO THE USER. THEN CREATE USER. 
 router.post('/', async (req, res, next) => { 
-
-  //Validation/Verification
   if(!req.body.user_name || !req.body.password ) {
     res.status(400).send('Username and Password required');
     return;
-  }
-    //Encryption - (hashing) password
-    const salt = await bcrypt.genSalt(10); //genSalt is asyncronous, so we have to specify waiting.
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  };
+  if(req.body.user_name === User.user_name){
+    res.status(400).send('message: Sorry..Username already exists!' );
+    return;
+  };
 
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
   User.create({
-      
-      admin: req.body.admin,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      user_name: req.body.user_name, 
-      password: hashedPassword,
-      email: req.body.email,
-      address: req.body.address,
-      state: req.body.state,
-      city: req.body.city,
-      zip_code: req.body.zip_code,
-      country: req.body.country,
-      profile_pic: req.body.profile_pic
-       
+    
+    admin: req.body.admin,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    user_name: req.body.user_name, 
+    password: hashedPassword,
+    email: req.body.email,
+    address: req.body.address,
+    state: req.body.state,
+    city: req.body.city,
+    zip_code: req.body.zip_code,
+    country: req.body.country,
+    profile_pic: req.body.profile_pic
+     
 
-  }).then(newUser => {
-      res.json({
+}).then(newUser => {
+    res.json({
 
-              id: newUser.id,
-              user_name: newUser.user_name
+            id: newUser.id,
+            user_name: newUser.user_name
 
-              })
-  }).catch(() => {
-      res.status(400).send();
-  });
+            })
+}).catch((err) => {
+    res.status(400).send();
+    console.log(err)
 });
-
-
+});
 
 module.exports = router;

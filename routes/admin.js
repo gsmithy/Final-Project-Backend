@@ -133,7 +133,6 @@ router.delete('/:id', async (req, res, next) => {
                 res.status(403).send('Please log in!');
                 return;
             };
-//          Admin Check
         if (user.user_name != 'ad'){
             res.status(403).send('Access denied!');
             return;
