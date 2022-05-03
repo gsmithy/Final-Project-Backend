@@ -7,7 +7,7 @@ router.get('/home', async (req, res, next) => {
   
   Post.findAll()
     .then( postList => {
-        res.json(postList);
+        res.status(200).send(postList);
     }).catch( err => {
         res.status(404).send(err);
     }) 
