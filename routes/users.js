@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const auth = require('../services/auth');
 const { User } = require('../models');
-const { Op } = require('sequelize');
 
 
 /* POST USER LOGIN */ 
@@ -62,7 +61,7 @@ router.post('/', async (req, res, next) => {
      
 
 }).then(newUser => {
-    res.json({
+    res.status(201).send({
 
             id: newUser.id,
             user_name: newUser.user_name

@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.Post);
       this.hasMany(models.Comment);
+      this.hasMany(models.Additional);
     };
   };
 

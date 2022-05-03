@@ -23,10 +23,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); //Cross-origin request. Adjusts permission for this server to be accessed by a client.
 
-//Sync DB to models
-models.sequelize.sync().then(() => {
+//SYNC DB TO MODELS
+models.sequelize.sync({alter: true}).then(() => {
   console.log('goodnews is Synced!')
 });
+//CREATE CONNECTION TO DB
   const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -41,7 +42,7 @@ models.sequelize.sync().then(() => {
   console.log('Nice! You are connected to the DB!')
 });
 
-//Reuseable Auth check
+//REAUSABLE AUTH CHECK 
 app.use( async (req, res, next) => {
     const header = req.headers.authorization; 
       if (!header) {
@@ -64,6 +65,7 @@ app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/admin', adminRouter);
+
 
 
 module.exports = app;
