@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 //SYNC DB TO MODELS
-models.sequelize.sync({alter: true, force: true}).then(() => {
+models.sequelize.sync({alter: true}).then(() => {
   console.log('goodnews is Synced!')
 });
 //CREATE CONNECTION TO DB
