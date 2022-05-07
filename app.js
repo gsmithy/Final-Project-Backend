@@ -22,9 +22,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); //Cross-origin request. Adjusts permission for this server to be accessed by a client.
+//CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 //SYNC DB TO MODELS
-models.sequelize.sync({alter: true}).then(() => {
+models.sequelize.sync({alter: true, force: true}).then(() => {
   console.log('goodnews is Synced!')
 });
 //CREATE CONNECTION TO DB
@@ -54,12 +60,7 @@ app.use( async (req, res, next) => {
     req.user = user;
     next();
 });
-//CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+
 
 app.use('/', homeRouter);
 app.use('/users', usersRouter);
