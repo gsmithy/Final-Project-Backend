@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); //Cross-origin request. Adjusts permission for this server to be accessed by a client.
 
 //SYNC DB TO MODELS
-models.sequelize.sync({alter: true}).then(() => {
+models.sequelize.sync().then(() => {
   console.log('goodnews is Synced!')
 });
 //CREATE CONNECTION TO DB
