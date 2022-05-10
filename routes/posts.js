@@ -8,11 +8,11 @@ const { Comment } = require('../models')
 router.get('/:username', async (req, res, next) => {
     const whosePosts = req.params.username;
     
-    const user = req.user;
-        if (!user){
-            res.status(403).send('Please log in!');
-            return;
-        };
+    // const user = req.user;
+    //     if (!user){
+    //         res.status(403).send('Please log in!');
+    //         return;
+    //     };
 
     Post.findAll({
         where: {
@@ -30,13 +30,14 @@ router.get('/:username', async (req, res, next) => {
 /* POST CREATE POSTS - User creates a new post */
 router.post('/', async (req, res, next) => {
     const user = req.user;
+
     if (!user){
         res.status(403).send('Please log in!');
         return;
     };
 
     if (user.user_name != req.body.user_name){
-        res.status(403).send('You can only post as yourself!');
+        res.status(403).send('You do not have priviledge for this..');
         return;
     };
 
@@ -59,6 +60,35 @@ router.post('/', async (req, res, next) => {
     });
 });
 
+/* POST CREATE COMMENT - User creates a comment on a post */
+router.post('/comment', async (req, res, next) => {
+    const user = req.user;
+    if (!user){
+        res.status(403).send('Please log in!');
+        return;
+    };
+
+    // if (user.user_name != req.body.user_name){
+    //     res.status(403).send('You do not have priviledge for this..');
+    //     return;
+    // };
+    const postId = Post.id; 
+    Comment.create({
+
+        comment: req.body.comment,
+        PostId: postId
+
+    }).then( newComment => {
+        res.status(201).send({
+            comment: newComment.comment,
+            createdAt: newComment.createdAt,
+            PostId: newComment.postId
+        });
+    }).catch(() => {
+        res.status(400).send();
+    });
+});
+
 /* PUT UPDATE POST - User updates a post */
 router.put('/:id', async (req, res, next) => {
     const postId = parseInt(req.params.id);
@@ -73,7 +103,7 @@ router.put('/:id', async (req, res, next) => {
         return;
     };
     // if (user.user_name != req.body.user_name){
-    //     res.status(403).send('You can only post as yourself!');
+    //     res.status(403).send('You do not have priviledge for this..');
     //     return;
     // };
 
@@ -108,7 +138,7 @@ router.delete('/:id', (req, res, next) => {
     };
 
     // if (user.user_name != req.body.user_name){
-    //     res.status(403).send('You can only post as yourself!');
+    //     res.status(403).send('You do not have priviledge for this..');
     //     return;
     // };
 

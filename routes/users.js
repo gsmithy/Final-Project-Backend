@@ -82,9 +82,46 @@ res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
 
             })
 }).catch((err) => {
-    res.status(400).send();
+    res.status(400).send("Sorry, the user you're trying to create already exists!");
     console.log(err)
 });
 });
+
+/* USER GETS - User views profile page & info */
+  router.get('/:username', async (req, res, next) => {
+    const userProfile = req.params.username;
+    
+    // const user = req.user;
+    //     if (!user){
+    //         res.status(403).send('Please log in!');
+    //         return;
+    //     };
+
+    User.find({
+        where: {
+            user_name: userProfile
+        }
+    }).then( user => {
+        if (user){
+            res.status(200).send({
+
+              first_name: user.first_name,
+              last_name: user.last_name,
+              user_name: user.user_name,
+              email: user.email,
+              address: user.address,
+              state: user.state,
+              city: user.city,
+              zip_code: user.zip_code,
+              country: user.country,
+              profile_pic: user.profile_pic
+              
+            });
+        } else {
+            res.status(400).send('Oops! Something went wrong!')
+        }
+    })
+});
+
 
 module.exports = router;
