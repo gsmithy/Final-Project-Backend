@@ -28,18 +28,25 @@ router.post('/login', async (req, res, next) => {
 });
 
 /* POST USER SIGN UP */
-//NEEDS PIMPING!! WAS TRYING TO ADD A CHECK TO SEE THAT THE USER DOESNT ALREADY EXIST VIA
-//EMAIL. THEN ANOTHER CHECK TO MAKE SURE THEY'RE USING A UNIQUE USERNAME AS A 400 WILL OCCUR APON
-//THAT HAPPENING WITHOUT ANY NOTIFICATION TO THE USER. THEN CREATE USER. 
 router.post('/', async (req, res, next) => { 
   if(!req.body.user_name || !req.body.password ) {
     res.status(400).send('Username and Password required');
     return;
   };
-  if(req.body.user_name === User.user_name){
-    res.status(400).send('message: Sorry..Username already exists!' );
-    return;
-  };
+
+      // User.findOne({ user_name: req.body.user_name }).then(res => {
+      //   if (res) {
+      //     console.log('RES:', res.user_name);
+      //     //res.status(400).send('Sorry!');
+        
+      //   } else return;
+      // })
+      
+  // if(req.body.user_name === user.user_name){
+  //   res.status(400).send('Sorry..Username already exists!' );
+  //   return;
+  // };
+  
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -68,9 +75,46 @@ router.post('/', async (req, res, next) => {
 
             })
 }).catch((err) => {
-    res.status(400).send();
+    res.status(400).send("Sorry, the user you're trying to create already exists!");
     console.log(err)
 });
 });
+
+/* USER GETS - User views profile page & info */
+  router.get('/:username', async (req, res, next) => {
+    const userProfile = req.params.username;
+    
+    // const user = req.user;
+    //     if (!user){
+    //         res.status(403).send('Please log in!');
+    //         return;
+    //     };
+
+    User.find({
+        where: {
+            user_name: userProfile
+        }
+    }).then( user => {
+        if (user){
+            res.status(200).send({
+
+              first_name: user.first_name,
+              last_name: user.last_name,
+              user_name: user.user_name,
+              email: user.email,
+              address: user.address,
+              state: user.state,
+              city: user.city,
+              zip_code: user.zip_code,
+              country: user.country,
+              profile_pic: user.profile_pic
+              
+            });
+        } else {
+            res.status(400).send('Oops! Something went wrong!')
+        }
+    })
+});
+
 
 module.exports = router;

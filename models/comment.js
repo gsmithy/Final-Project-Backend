@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     Comment.init ({
 
         comment: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true
         },
         like: {
