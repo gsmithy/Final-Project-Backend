@@ -124,4 +124,34 @@ res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
 });
 
 
+
+router.post("/getOne", (req, res) => {
+  res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
+
+
+
+let token = req.body.jwt
+
+
+  if (token) {
+    auth.verifyUser(token).then(user => {
+      if (user) {
+        console.log(user)
+        User.findOne({
+          where: {
+           id: user.id
+          }
+        }).then(response => {
+          res.json(response)
+        })
+      }
+    })
+  }
+
+
+
+
+})
+
+
 module.exports = router;

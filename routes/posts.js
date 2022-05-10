@@ -36,7 +36,10 @@ router.post('/', async (req, res, next) => {
         return;
     };
 
-    if (user.user_name != req.body.user_name){
+    if (user.user_name != req.body.username){
+        console.log(user.user_name);
+        console.log(req.body.user_name);
+
         res.status(403).send('You do not have priviledge for this..');
         return;
     };
