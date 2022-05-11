@@ -2,30 +2,31 @@ const express = require('express');
 const router = express.Router();
 const { Post } = require('../models');
 const { Comment } = require('../models')
+const auth = require('../services/auth')
 
 
-/* GET DASHBOARD POSTS - User sees all his posts */
-router.get('/:username', async (req, res, next) => {
-    const whosePosts = req.params.username;
-    
-    // const user = req.user;
-    //     if (!user){
-    //         res.status(403).send('Please log in!');
-    //         return;
-    //     };
-
-    Post.findAll({
-        where: {
-            user_name: whosePosts
+/* POST DASHBOARD POSTS - User sees all his posts */
+router.post("/getPost", async (req, res) => {
+    res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
+  
+    let token = req.body.jwt;
+  
+    if (token) {
+      auth.verifyUser(token).then((user) => {
+        if (user) {
+          // console.log(user);
+          Post.findOne({
+            where: {
+              UserId: user.id,
+            },
+          }).then((response) => {
+            // console.log('response', response)
+            res.json([response]);
+          });
         }
-    }).then( result => {
-        if (result){
-            res.status(200).send(result);
-        } else {
-            res.status(400).send('Oops! Something went wrong!')
-        }
-    })
-});
+      });
+    }
+  });
 
 /* POST CREATE POSTS - User creates a new post */
 router.post('/', async (req, res, next) => {
@@ -37,8 +38,8 @@ router.post('/', async (req, res, next) => {
     };
 
     if (user.user_name != req.body.username){
-        console.log(user.user_name);
-        console.log(req.body.user_name);
+        // console.log(user.user_name);
+        // console.log(req.body.user_name);
 
         res.status(403).send('You do not have priviledge for this..');
         return;
@@ -58,8 +59,8 @@ router.post('/', async (req, res, next) => {
             description: newPost.description,
             createdAt: newPost.createdAt 
         });
-    }).catch(() => {
-        res.status(400).send();
+    }).catch((err) => {
+        res.status(400).send(err);
     });
 });
 

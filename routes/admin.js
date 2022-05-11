@@ -4,7 +4,6 @@ const { User } = require('../models');
 const { Post } = require('../models');
 const { Additional } = require('../models');
 
-
 /* GET ALL USERS - Admin displays all users */
 router.get('/', async (req, res, next) => {
     const user = req.user;
@@ -86,7 +85,6 @@ router.post('/update', async (req, res, next) => {
             res.status(400).send(err);
         });
     });
-
 
 /* PUT ADMIN UPDATES - Admin updates a post */
 router.put('/:id', async (req, res, next) => {
