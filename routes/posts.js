@@ -119,7 +119,7 @@ router.put('/', async (req, res, next) => {
 
     }, {
         where: {
-            id: postId
+            id: user.id
         }
     }).then( () => {
         res.status(200).send('Update success!');
