@@ -53,14 +53,15 @@ router.post('/', async (req, res, next) => {
         UserId: user.id 
 
     }).then(newPost => {
+        console.log('new', newPost)
         res.status(201).send({
             user_name: newPost.user_name,
             location: newPost.location,
             description: newPost.description,
             createdAt: newPost.createdAt 
         });
-    }).catch((err) => {
-        res.status(400).send(err);
+    }).catch(() => {
+        res.status(400).send('Sorry something went wrong...');
     });
 });
 
@@ -94,13 +95,13 @@ router.post('/comment', async (req, res, next) => {
 });
 
 /* PUT UPDATE POST - User updates a post */
-router.put('/:id', async (req, res, next) => {
-    const postId = parseInt(req.params.id);
+router.put('/', async (req, res, next) => {
+    // const postId = parseInt(req.params.id);
     
-    if (!postId || postId <= 0) {
-        res.status(400).send("Invalid ID");
-        return;
-    };
+    // if (!postId || postId <= 0) {
+    //     res.status(400).send("Invalid ID");
+    //     return;
+    // };
     const user = req.user;
     if (!user){
         res.status(403).send('Please log in!');
