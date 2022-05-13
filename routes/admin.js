@@ -13,14 +13,14 @@ router.get('/', async (req, res, next) => {
             return;
         };
 
-            if (user.user_name != 'ad'){
+            if (user.admin != 1){
                 res.status(403).send('Access denied!');
                 return;
             };
 
             User.findAll()
             .then( allUsers => {
-                res.status(200).send(allUsers);
+                res.json(allUsers);
             }).catch( err => {
                 res.status(500).send(err)
             });
