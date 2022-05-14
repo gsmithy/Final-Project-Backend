@@ -114,22 +114,22 @@ router.post("/comment", async (req, res, next) => {
 });
 
 /* PUT UPDATE POST - User updates a post */
-router.put("/", async (req, res, next) => {
-  // const postId = parseInt(req.params.id);
+router.put("/:id", async (req, res, next) => {
+  const postId =parseInt(req.params.id);
 
-  // if (!postId || postId <= 0) {
-  //     res.status(400).send("Invalid ID");
-  //     return;
-  // };
-  // const user = req.user;
-  // if (!user){
-  //     res.status(403).send('Please log in!');
-  //     return;
-  // };
-  // if (user.user_name != req.body.user_name){
-  //     res.status(403).send('You do not have priviledge for this..');
-  //     return;
-  // };
+//   if (!postId || postId <= 0) {
+//       res.status(400).send("Invalid ID");
+//       return;
+//   };
+//   const user = req.user;
+//   if (!user){
+//       res.status(403).send('Please log in!');
+//       return;
+//   };
+//   if (user.user_name != req.body.user_name){
+//       res.status(403).send('You do not have priviledge for this..');
+//       return;
+//   };
 
   Post.update(
     {
@@ -138,7 +138,7 @@ router.put("/", async (req, res, next) => {
     },
     {
       where: {
-        id: user.id,
+        id: postId
       },
     }
   )
