@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const auth = require("../services/auth");
 const { User } = require("../models");
+const { Post } = require("../models");
 const cors = require("cors");
 
 router.use(cors());
@@ -93,7 +94,7 @@ router.post("/getInfo", (req, res) => {
         User.findOne({
           where: {
             id: user.id,
-          },
+          }, include: [Post]
         }).then((response) => {
           // console.log(response)
           res.json(response);
