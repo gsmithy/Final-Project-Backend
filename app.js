@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var postsRouter = require('./routes/posts');
 var adminRouter = require('./routes/admin');
+var imgRouter = require('./routes/img');
 
 var app = express();
 
@@ -66,6 +67,7 @@ app.use('/', homeRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/admin', adminRouter);
+app.use('/users/images', imgRouter);
 
 
 

@@ -1,3 +1,10 @@
 node_modules
-prac.js
+
+services/firebase-key.json
+
+notes.txt
+
+.env
+
+
 
