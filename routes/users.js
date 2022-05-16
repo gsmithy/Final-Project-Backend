@@ -103,5 +103,27 @@ router.post("/getInfo", (req, res) => {
     });
   }
 });
+/* POST IMAGE - User uploads an image */
+router.post("/getInfo/:id", (req, res) => {
+  res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
+  let userId = req.params.id
+  let token = req.body.jwt;
+
+  if (token) {
+    auth.verifyUser(token).then((user) => {
+      if (user) {
+        // console.log(user);
+        User.findOne({
+          where: {
+            id: userId,
+          }
+        }).then((response) => {
+          // console.log(response)
+          res.json(response);
+        });
+      }
+    });
+  }
+});
 
 module.exports = router;
