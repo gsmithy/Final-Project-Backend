@@ -25,6 +25,27 @@ router.get('/', async (req, res, next) => {
             });
 });
 
+router.get('/posts', async (req, res, next) => {
+    const user = req.user;
+        if (!user){
+            res.status(403).send('Please Log In!');
+            return;
+        };
+
+            if (user.admin != 1){
+                res.status(403).send('Access denied!');
+                return;
+            };
+
+            Post.findAll()
+            .then( allPosts => {
+                res.json(allPosts);
+            }).catch( err => {
+                res.status(500).send(err)
+            });
+});
+
+
 /* POST ADMIN POSTS - Admin creates a post */
 router.post('/', async (req, res, next) => {
     const user = req.user;
