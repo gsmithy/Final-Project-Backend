@@ -12,10 +12,17 @@ router.get('/', async (req, res, next) => {
             return;
         };
 
+
+            if (user.user_name != '1'){
+                res.status(403).send('Access denied!');
+                return;
+            };
+
             if (user.admin != 1){
                 res.status(403).send('Access denied!');
                 return;
             };
+
 
             User.findAll()
             .then( allUsers => {
@@ -45,6 +52,53 @@ router.get('/posts', async (req, res, next) => {
             });
 });
 
+
+/* GET USER BY ID - Admin gets a user by id */
+router.get('/:id', async (req, res, next) => {
+    let userId = req.params.id;
+    const user = req.user;
+        if (!user){
+            res.status(403).send('Please Log In!');
+            return;
+        };
+
+            // if (user.user_name != '1'){
+            //     res.status(403).send('Access denied!');
+            //     return;
+            // };
+
+            User.findOne({
+                where: {
+                    id: userId
+                }
+            })
+            .then( user => {
+                res.status(200).send(user);
+            }).catch( err => {
+                res.status(500).send(err)
+            });
+});
+/* ADMIN GETS POSTS - Admin views posts */
+router.get('/posts', async (req, res, next) => {
+    const user = req.user;
+        if (!user){
+            res.status(403).send('Please Log In!');
+            return;
+        };
+
+            // if (user.user_name != '1'){
+            //     res.status(403).send('Access denied!');
+            //     return;
+            // };
+
+            Post.findAll()
+            .then( allPosts => {
+                res.send(allPosts);
+                console.log('res okay!')
+            }).catch( err => {
+                res.status(500).send(err)
+            });
+});
 
 /* POST ADMIN POSTS - Admin creates a post */
 router.post('/', async (req, res, next) => {
@@ -78,7 +132,7 @@ router.post('/', async (req, res, next) => {
         });
     });
 
-/* ADMIN CREATES NEWSPOST - Admin creates updates or news post. */
+/* ADMIN CREATES NEWSPOST - Admin creates a news post. */
 router.post('/update', async (req, res, next) => {
     const user = req.user;
         if (!user){
@@ -153,10 +207,10 @@ router.delete('/user/:id', async (req, res, next) => {
                 res.status(403).send('Please log in!');
                 return;
             };
-        if (user.user_name != 'ad'){
-            res.status(403).send('Access denied!');
-            return;
-        };
+        // if (user.user_name != 'ad'){
+        //     res.status(403).send('Access denied!');
+        //     return;
+        // };
         
         User.destroy({
             where: {
@@ -182,10 +236,12 @@ router.delete('/:id', async (req, res, next) => {
                 res.status(403).send('Please log in!');
                 return;
             };
+  
         if (user.admin != 1){
             res.status(403).send('Access denied!');
             return;
         };
+
         Post.destroy({
             where: {
                 id: postId
