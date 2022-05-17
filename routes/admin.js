@@ -12,18 +12,46 @@ router.get('/', async (req, res, next) => {
             return;
         };
 
-            // if (user.user_name != '1'){
-            //     res.status(403).send('Access denied!');
-            //     return;
-            // };
+
+            if (user.user_name != '1'){
+                res.status(403).send('Access denied!');
+                return;
+            };
+
+            if (user.admin != 1){
+                res.status(403).send('Access denied!');
+                return;
+            };
+
 
             User.findAll()
             .then( allUsers => {
-                res.status(200).send(allUsers);
+                res.json(allUsers);
             }).catch( err => {
                 res.status(500).send(err)
             });
 });
+
+router.get('/posts', async (req, res, next) => {
+    const user = req.user;
+        if (!user){
+            res.status(403).send('Please Log In!');
+            return;
+        };
+
+            if (user.admin != 1){
+                res.status(403).send('Access denied!');
+                return;
+            };
+
+            Post.findAll()
+            .then( allPosts => {
+                res.json(allPosts);
+            }).catch( err => {
+                res.status(500).send(err)
+            });
+});
+
 
 /* GET USER BY ID - Admin gets a user by id */
 router.get('/:id', async (req, res, next) => {
@@ -208,10 +236,12 @@ router.delete('/:id', async (req, res, next) => {
                 res.status(403).send('Please log in!');
                 return;
             };
-        // if (user.user_name != 'ad'){
-        //     res.status(403).send('Access denied!');
-        //     return;
-        // };
+  
+        if (user.admin != 1){
+            res.status(403).send('Access denied!');
+            return;
+        };
+
         Post.destroy({
             where: {
                 id: postId
