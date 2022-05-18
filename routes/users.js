@@ -16,14 +16,14 @@ router.post("/login", async (req, res, next) => {
     },
   }).then(async (user) => {
     if (!user) {
-      res.status(404).send("Invalid Username");
+      res.status(401).send("Invalid Username");
       return;
     }
     const valid = await bcrypt.compare(req.body.password, user.password);
 
     if (valid) {
       const jwt = auth.createJWT(user);
-      res.status(201).send({ jwt });
+      res.status(201).send({ jwt, user });
     } else {
       res.status(401).send("Invalid Password!");
     }
