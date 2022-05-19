@@ -20,7 +20,8 @@ router.get('/homelist', async (req, res, next) => {
   
     Post.findAll({
       limit: 10,
-      order: [ [ 'createdAt', 'DESC' ]]
+      order: [ [ 'createdAt', 'DESC' ]],
+      offset: 3
     })
       .then( postList => {
           res.status(200).send(postList);
