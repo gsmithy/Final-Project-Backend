@@ -12,12 +12,6 @@ router.get('/', async (req, res, next) => {
             return;
         };
 
-
-            if (user.user_name != '1'){
-                res.status(403).send('Access denied!');
-                return;
-            };
-
             if (user.admin != 1){
                 res.status(403).send('Access denied!');
                 return;
