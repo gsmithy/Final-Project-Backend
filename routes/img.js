@@ -26,11 +26,6 @@ router.post('/:id', uploader.single('image'), async (req, res) => {
         res.status(400).send("Invalid ID");
         return;
     };
-    // const user = req.user;
-    // if (!user){
-    //     res.status(403).send('Please log in!');
-    //     return;
-    // }
     // MAKE SURE THE USER HAS A FILE
     try {
         if (!req.file){

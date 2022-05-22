@@ -28,18 +28,12 @@ router.post("/getPost", async (req, res) => {
 });
 /* GET POST - User gets post to edit */
 router.get("/getPost/:id", async (req, res) => {
-    const postId = req.params.id;
+  const postId = req.params.id;
   // res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
 
-  // let token = req.body.jwt;
-
-  // if (token) {
-  //   auth.verifyUser(token).then((user) => {
-  //     if (user) {
-  // console.log(user);
   Post.findOne({
     where: {
-      id: postId
+      id: postId,
     },
   }).then((response) => {
     // console.log('response', response)
@@ -55,15 +49,6 @@ router.post("/", async (req, res, next) => {
     res.status(403).send("Please log in!");
     return;
   }
-
-  // if (user.user_name != req.body.username){
-  //     // console.log(user.user_name);
-  //     // console.log(req.body.user_name);
-
-  //     res.status(403).send('You do not have priviledge for this..');
-  //     return;
-  // };
-
   Post.create({
     user_name: req.body.username,
     description: req.body.description,
@@ -91,11 +76,6 @@ router.post("/comment", async (req, res, next) => {
     res.status(403).send("Please log in!");
     return;
   }
-
-  // if (user.user_name != req.body.user_name){
-  //     res.status(403).send('You do not have priviledge for this..');
-  //     return;
-  // };
   const postId = Post.id;
   Comment.create({
     comment: req.body.comment,
@@ -118,18 +98,14 @@ router.put("/:id", async (req, res, next) => {
   const postId = parseInt(req.params.id);
 
   if (!postId || postId <= 0) {
-      res.status(400).send("Invalid ID");
-      return;
-  };
+    res.status(400).send("Invalid ID");
+    return;
+  }
   const user = req.user;
-  if (!user){
-      res.status(403).send('Please log in!');
-      return;
-  };
-//   if (user.user_name != req.body.user_name){
-//       res.status(403).send('You do not have priviledge for this..');
-//       return;
-//   };
+  if (!user) {
+    res.status(403).send("Please log in!");
+    return;
+  }
 
   Post.update(
     {
@@ -138,7 +114,7 @@ router.put("/:id", async (req, res, next) => {
     },
     {
       where: {
-        id: postId
+        id: postId,
       },
     }
   )
@@ -163,11 +139,6 @@ router.delete("/:id", (req, res, next) => {
     res.status(403).send("Please log in!");
     return;
   }
-
-  // if (user.user_name != req.body.user_name){
-  //     res.status(403).send('You do not have priviledge for this..');
-  //     return;
-  // };
 
   Post.destroy({
     where: {

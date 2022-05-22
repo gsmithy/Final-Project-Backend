@@ -34,7 +34,6 @@ router.post("/login", async (req, res, next) => {
 router.post("/signup", (req, res, next) => {
   res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
 
-  console.log("////Its me!");
   if (!req.body.user_name || !req.body.password) {
     console.log(req.body.user_name);
     res.status(400).send("Username and Password required");
@@ -94,7 +93,8 @@ router.post("/getInfo", (req, res) => {
         User.findOne({
           where: {
             id: user.id,
-          }, include: [Post]
+          },
+          include: [Post],
         }).then((response) => {
           // console.log(response)
           res.json(response);
@@ -106,7 +106,7 @@ router.post("/getInfo", (req, res) => {
 /* POST IMAGE - User uploads an image */
 router.post("/getInfo/:id", (req, res) => {
   res.setHeader("Acess-Control-Allow-Origin", "http://localhost:3000");
-  let userId = req.params.id
+  let userId = req.params.id;
   let token = req.body.jwt;
 
   if (token) {
@@ -116,7 +116,7 @@ router.post("/getInfo/:id", (req, res) => {
         User.findOne({
           where: {
             id: userId,
-          }
+          },
         }).then((response) => {
           // console.log(response)
           res.json(response);

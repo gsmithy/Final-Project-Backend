@@ -1,250 +1,247 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { User } = require('../models');
-const { Post } = require('../models');
-const { Additional } = require('../models');
+const { User } = require("../models");
+const { Post } = require("../models");
+const { Additional } = require("../models");
 
 /* GET ALL USERS - Admin displays all users */
-router.get('/', async (req, res, next) => {
-    const user = req.user;
-        if (!user){
-            res.status(403).send('Please Log In!');
-            return;
-        };
+router.get("/", async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please Log In!");
+    return;
+  }
 
-            if (user.admin != 1){
-                res.status(403).send('Access denied!');
-                return;
-            };
+  if (user.admin != 1) {
+    res.status(403).send("Access denied!");
+    return;
+  }
 
-
-            User.findAll()
-            .then( allUsers => {
-                res.json(allUsers);
-            }).catch( err => {
-                res.status(500).send(err)
-            });
+  User.findAll()
+    .then((allUsers) => {
+      res.json(allUsers);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
-router.get('/posts', async (req, res, next) => {
-    const user = req.user;
-        if (!user){
-            res.status(403).send('Please Log In!');
-            return;
-        };
+router.get("/posts", async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please Log In!");
+    return;
+  }
 
-            if (user.admin != 1){
-                res.status(403).send('Access denied!');
-                return;
-            };
+  if (user.admin != 1) {
+    res.status(403).send("Access denied!");
+    return;
+  }
 
-            Post.findAll()
-            .then( allPosts => {
-                res.json(allPosts);
-            }).catch( err => {
-                res.status(500).send(err)
-            });
+  Post.findAll()
+    .then((allPosts) => {
+      res.json(allPosts);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
-
 
 /* GET USER BY ID - Admin gets a user by id */
-router.get('/:id', async (req, res, next) => {
-    let userId = req.params.id;
-    const user = req.user;
-        if (!user){
-            res.status(403).send('Please Log In!');
-            return;
-        };
+router.get("/:id", async (req, res, next) => {
+  let userId = req.params.id;
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please Log In!");
+    return;
+  }
 
-            // if (user.user_name != '1'){
-            //     res.status(403).send('Access denied!');
-            //     return;
-            // };
-
-            User.findOne({
-                where: {
-                    id: userId
-                }
-            })
-            .then( user => {
-                res.status(200).send(user);
-            }).catch( err => {
-                res.status(500).send(err)
-            });
+  User.findOne({
+    where: {
+      id: userId,
+    },
+  })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 /* ADMIN GETS POSTS - Admin views posts */
-router.get('/posts', async (req, res, next) => {
-    const user = req.user;
-        if (!user){
-            res.status(403).send('Please Log In!');
-            return;
-        };
+router.get("/posts", async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please Log In!");
+    return;
+  }
 
-            // if (user.user_name != '1'){
-            //     res.status(403).send('Access denied!');
-            //     return;
-            // };
+  if (user.user_name != "1") {
+    res.status(403).send("Access denied!");
+    return;
+  }
 
-            Post.findAll()
-            .then( allPosts => {
-                res.send(allPosts);
-                console.log('res okay!')
-            }).catch( err => {
-                res.status(500).send(err)
-            });
+  Post.findAll()
+    .then((allPosts) => {
+      res.send(allPosts);
+      console.log("res okay!");
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 /* POST ADMIN POSTS - Admin creates a post */
-router.post('/', async (req, res, next) => {
-    const user = req.user;
-        if (!user){
-            res.status(401).send('Please log in!');
-            return;
-        };
+router.post("/", async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    res.status(401).send("Please log in!");
+    return;
+  }
 
-            if (user.user_name != 'ad'){
-                res.status(403).send('Access Denied!');
-                return;
-        };
+  if (user.user_name != "ad") {
+    res.status(403).send("Access Denied!");
+    return;
+  }
 
-        Post.create({
-
-            user_name: req.body.user_name,
-            location: req.body.location,
-            description: req.body.description,
-            UserId: user.id 
-    
-        }).then( newPost => {
-            res.status(201).send({
-                user_name: newPost.user_name,
-                location: newPost.location,
-                description: newPost.description,
-                createdAt: newPost.createdAt
-            });
-        }).catch(() => {
-            res.status(400).send();
-        });
+  Post.create({
+    user_name: req.body.user_name,
+    location: req.body.location,
+    description: req.body.description,
+    UserId: user.id,
+  })
+    .then((newPost) => {
+      res.status(201).send({
+        user_name: newPost.user_name,
+        location: newPost.location,
+        description: newPost.description,
+        createdAt: newPost.createdAt,
+      });
+    })
+    .catch(() => {
+      res.status(400).send();
     });
+});
 
 /* ADMIN CREATES NEWSPOST - Admin creates a news post. */
-router.post('/update', async (req, res, next) => {
-    const user = req.user;
-        if (!user){
-            res.status(401).send('Please log in!');
-            return;
-        };
+router.post("/update", async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    res.status(401).send("Please log in!");
+    return;
+  }
 
-            if (user.user_name != 'ad'){
-                res.status(403).send('Access Denied!');
-                return;
-        };
+  if (user.user_name != "ad") {
+    res.status(403).send("Access Denied!");
+    return;
+  }
 
-        Additional.create({
-
-           article: req.body.article,
-           UserId: user.id
-    
-        }).then( newPost => {
-            res.status(201).send({
-               
-                article: newPost.article,
-                createdAt: newPost.createdAt
-            });
-        }).catch((err) => {
-            res.status(400).send(err);
-        });
+  Additional.create({
+    article: req.body.article,
+    UserId: user.id,
+  })
+    .then((newPost) => {
+      res.status(201).send({
+        article: newPost.article,
+        createdAt: newPost.createdAt,
+      });
+    })
+    .catch((err) => {
+      res.status(400).send(err);
     });
+});
 
 /* PUT ADMIN UPDATES - Admin updates a post */
-router.put('/:id', async (req, res, next) => {
-    const postId = parseInt(req.params.id);
-    
-    if (!postId || postId <= 0) {
-        res.status(400).send("Invalid ID");
-        return;
-    };
-    const user = req.user;
-            if (!user){
-                res.status(403).send('Please log in!');
-                return;
-    };
-        if (user.user_name != 'ad'){
-            res.status(403).send('Access Denied!');
-            return;
-    };
-                Post.update({
+router.put("/:id", async (req, res, next) => {
+  const postId = parseInt(req.params.id);
 
-                    description: req.body.description,
-                    location: req.body.location
-
-                }, {
-                    where: {
-                        id: postId
-                    }
-                    }).then( () => {
-                        res.status(200).send('Update success!');
-                    }).catch(() => {
-                        res.status(400).send();
-                    })
-                });
+  if (!postId || postId <= 0) {
+    res.status(400).send("Invalid ID");
+    return;
+  }
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please log in!");
+    return;
+  }
+  if (user.user_name != "ad") {
+    res.status(403).send("Access Denied!");
+    return;
+  }
+  Post.update(
+    {
+      description: req.body.description,
+      location: req.body.location,
+    },
+    {
+      where: {
+        id: postId,
+      },
+    }
+  )
+    .then(() => {
+      res.status(200).send("Update success!");
+    })
+    .catch(() => {
+      res.status(400).send();
+    });
+});
 
 /* DELETE USER - Admin deletes user */
-router.delete('/user/:id', async (req, res, next) => {
-    const userId = parseInt(req.params.id)
+router.delete("/user/:id", async (req, res, next) => {
+  const userId = parseInt(req.params.id);
 
-        if (!userId || userId <= 0){
-            res.status(400).send('Please insert an id');
-            return;
-        };
-        const user = req.user;
-             if (!user){
-                res.status(403).send('Please log in!');
-                return;
-            };
-        // if (user.user_name != 'ad'){
-        //     res.status(403).send('Access denied!');
-        //     return;
-        // };
-        
-        User.destroy({
-            where: {
-                id: userId
-            }
-        })
-        .then(() => {
-            res.status(204).send('User successfully deleted!');
-            return;
-        })
+  if (!userId || userId <= 0) {
+    res.status(400).send("Please insert an id");
+    return;
+  }
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please log in!");
+    return;
+  }
+  if (user.user_name != "ad") {
+    res.status(403).send("Access denied!");
+    return;
+  }
+
+  User.destroy({
+    where: {
+      id: userId,
+    },
+  }).then(() => {
+    res.status(204).send("User successfully deleted!");
+    return;
+  });
 });
 
 /* DELETE POST - Admin deletes a post */
-router.delete('/:id', async (req, res, next) => {
-    const postId = parseInt(req.params.id)
+router.delete("/:id", async (req, res, next) => {
+  const postId = parseInt(req.params.id);
 
-        if (!postId || postId <= 0){
-            res.status(400).send('Please insert an id');
-            return;
-        };
-        const user = req.user;
-             if (!user){
-                res.status(403).send('Please log in!');
-                return;
-            };
-  
-        if (user.admin != 1){
-            res.status(403).send('Access denied!');
-            return;
-        };
+  if (!postId || postId <= 0) {
+    res.status(400).send("Please insert an id");
+    return;
+  }
+  const user = req.user;
+  if (!user) {
+    res.status(403).send("Please log in!");
+    return;
+  }
 
-        Post.destroy({
-            where: {
-                id: postId
-            }
-        })
-        .then(() => {
-            res.status(204).send('Post successfully deleted!');
-            return;
-        })
+  if (user.admin != 1) {
+    res.status(403).send("Access denied!");
+    return;
+  }
+
+  Post.destroy({
+    where: {
+      id: postId,
+    },
+  }).then(() => {
+    res.status(204).send("Post successfully deleted!");
+    return;
+  });
 });
 
 module.exports = router;
