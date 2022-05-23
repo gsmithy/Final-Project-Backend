@@ -18,7 +18,7 @@ router.get("/home", async (req, res, next) => {
 
 router.get("/homelist", async (req, res, next) => {
   Post.findAll({
-    limit: 10,
+    limit: 5,
     order: [["createdAt", "DESC"]],
     offset: 3,
   })
