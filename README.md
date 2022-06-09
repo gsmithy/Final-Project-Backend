@@ -1,6 +1,5 @@
-# team-bethel-boiz-backend
+Final Project, 'Good News' Back-End
 
 Hi, 
-
-Our team of two, is coding back-end funcionality for our final project 'Good News'.
-We will be generating database for our users & posts, as-well-as all routing and authentication.
+Please run npm install.
+Thanks for taking a peek..
